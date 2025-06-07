@@ -1,0 +1,55 @@
+# Configurações básicas da aplicação
+#
+# Copie este arquivo para .env e preencha as configurações básicas da aplicação
+# Os dados (funcionais) de exemplo abaixo exemplificam as configurações 
+# básicas da aplicação e mostram que se você puder complicar a vida de um 
+# eventual invasor, faça-o.
+
+# MYSQL_ROOT_PASSWORD="MaQ9Rb9^%aA6wjAIYD*xtMb2gG79A#hd"  # defina aqui a senha do root do mysql
+# MYSQL_DATABASE="bguanhfeurpsvcqafwvslbglhsxrinab"  # defina aqui o nome do banco de dados do seu projeto
+# MYSQL_USER="sjmspyxdexooyubazfmkyyqjpbnwyssk"  # defina aqui o nome do usuário do banco de dados do seu projeto
+# MYSQL_PASSWORD="MN2TWVC!F#u9AAEVMrLZIVzN#BsjkHph"  # defina aqui a senha do usuário do banco de dados do seu projeto
+
+MYSQL_ROOT_PASSWORD="582R4Zbf6kId08Pr1twe40DCgRd0Jntwfe4LBDxpuEbLCMDiM0K7QUZwouO16BNi"  # defina aqui a senha do root do mysql
+MYSQL_DATABASE="db_helpdesk_portal"  # defina aqui o nome do banco de dados do seu projeto
+MYSQL_USER="usr_helpdesk_portal"  # defina aqui o nome do usuário do banco de dados do seu projeto
+MYSQL_PASSWORD="82SJqEee3zv4SwCMl8oh71fjoGVzmjg4e4l6JoMPWWdKrjqXEQd0Atra2ii3ds3A"  # defina aqui a senha do usuário do banco de dados do seu projeto
+
+######################################################################
+#
+# Configurações do host e nome do projeto
+#
+# OBS: O nome do host de desenvolvimento definido em APP_HOST, 
+#      originalmente chamado "lb.test", deve ser registrado 
+#      no arquivo /etc/hosts da máquina host caso se deseje
+#      testar a aplicação localmente:
+#
+#      127.0.0.1       lb.test
+#
+APP_HOST=helpdesk.dgti.uerj.br     # defina aqui o host (domínio - FQDN) do seu projeto
+APP_NAME=portal   # defina aqui o nome do seu projeto
+
+HOST_ENV=development
+#HOST_ENV=production
+#HOST_ENV=staging
+
+APP_ENV=local
+APP_DEBUG=true
+
+######################################################################
+
+#APP_URL_BASE=http://${APP_HOST}    #somente se muito necessário
+APP_URL_BASE=https://${APP_HOST} 
+APP_URL=${APP_URL_BASE}/${APP_NAME} 
+
+APP_PREFIX=""
+
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+COMPOSE_PROJECT_NAME=helpdesk-portal
