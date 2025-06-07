@@ -1,0 +1,64 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches: [develop, release/*, main]
+  pull_request:
+    branches: [develop, release/*, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+          docker-compose -f docker/development/docker-compose.yml up -d
+          docker-compose -f docker/development/docker-compose.yml exec -T php php artisan test
+
+  deploy-staging:
+    needs: test
+    if: startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Extract branch name
+        shell: bash
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+    
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to Staging
+        run: |
+          ssh ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_HOST }} "cd ${{ secrets.STAGING_PATH }} && \
+          git fetch && \
+          git checkout ${{ env.BRANCH_NAME }} && \
+          git pull && \
+          docker-compose -f docker/homolog/docker-compose.yml up -d --build && \ 
+          docker-compose -f docker/homolog/docker-compose.yml exec -T php php artisan migrate"
+
+  deploy-production:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to Production
+        run: |
+          ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_HOST }} "cd ${{ secrets.PRODUCTION_PATH }} && \
+          git fetch && \
+          git checkout main && \
+          git pull && \
+          docker-compose -f docker/production/docker-compose.yml up -d --build && \
+          docker-compose -f docker/production/docker-compose.yml exec -T php php artisan migrate --force"
