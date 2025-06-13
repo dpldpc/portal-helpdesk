@@ -14,8 +14,18 @@
 
     <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script src="https://kit.fontawesome.com/a9d0042508.js" crossorigin="anonymous"></script>
+    <!-- Favicon Animado -->
+    <x-favicon-animado
+  :total-frames="40"
+  :frame-rate="10"
+     path="favicons"
+/>
+
 </head>
 <body>
+    <x-barra-ouvidoria />
     @yield('content')
     @livewireScripts
 </body>

@@ -77,12 +77,24 @@ services:
         - APP_URL_BASE=${APP_URL_BASE}
         - APP_URL=${APP_URL}
         - APP_PREFIX=${APP_PREFIX}
-        - HOST_ENV=${COMPOSE_PROJECT_NAME}
+        - APP_ENV=${APP_ENV}
+        - APP_DEBUG=${APP_DEBUG}
+        - MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD}"
+        - MYSQL_DATABASE="${MYSQL_DATABASE}"
+        - MYSQL_USER="${MYSQL_USER}"
+        - MYSQL_PASSWORD="${MYSQL_PASSWORD}"
+        - HOST_ENV=${HOST_ENV}
         - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
         - COMPOSE_PROJECT_DIR=${COMPOSE_PROJECT_NAME}
         - REDIS_HOST=${REDIS_HOST}
         - REDIS_PASSWORD=${REDIS_PASSWORD}
         - REDIS_PORT=${REDIS_PORT}
+        - DB_CONNECTION=${DB_CONNECTION}
+        - DB_HOST=${DB_HOST}
+        - DB_PORT=${DB_PORT}
+        - DB_DATABASE=${MYSQL_DATABASE}
+        - DB_USERNAME=${MYSQL_USER}
+        - DB_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - ../../../www:/var/www/
       - ./php/php.ini:/usr/local/etc/php/conf.d/custom.ini
@@ -116,6 +128,9 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+    depends_on:
+      - mysql
+      - redis
     networks:
       - app-network
 
@@ -161,5 +176,3 @@ networks:
   proxyrev-network:
     name: proxyrev-network
     external: true
-
-
