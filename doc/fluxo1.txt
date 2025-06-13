@@ -1,0 +1,72 @@
+master (produção)
+  ↑
+release (homologação/staging)
+  ↑
+develop (desenvolvimento)
+  ↑
+feature/nome-da-feature
+hotfix/nome-do-hotfix
+
+
+=======
+3.1. Fluxo de Desenvolvimento até Produção
+Desenvolvimento de Features
+
+git flow feature start nome-da-feature
+# Desenvolva a feature
+git flow feature finish nome-da-feature
+
+Copy
+
+Execute
+
+Preparação para Homologação
+
+git flow release start v1.0.0
+# Ajustes finais, testes, documentação
+
+Copy
+
+Execute
+
+Deploy para Homologação
+
+# Na branch release/v1.0.0
+docker-compose -f docker/staging/docker-compose.yml up -d --build
+
+# Execute migrações e seeds específicas do ambiente de staging
+docker-compose -f docker/staging/docker-compose.yml exec php php artisan migrate
+
+Copy
+
+Execute
+
+Finalização da Release e Deploy para Produção
+
+git flow release finish v1.0.0
+# Isso mergeia a release para master e develop, e cria uma tag
+
+git checkout master
+git push origin master
+git push --tags
+
+# Deploy para produção
+docker-compose -f docker/production/docker-compose.yml up -d --build
+docker-compose -f docker/production/docker-compose.yml exec php php artisan migrate --force
+
+Copy
+
+Execute
+
+3.2. Hotfixes para Produção
+git flow hotfix start hotfix-nome
+# Correções de bugs críticos
+git flow hotfix finish hotfix-nome
+# Isso mergeia o hotfix para master e develop
+
+# Deploy da correção
+git checkout master
+git push origin master
+git push --tags
+
+docker-compose -f docker/production/docker-compose.yml up -d --build
