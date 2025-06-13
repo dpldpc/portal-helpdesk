@@ -1,0 +1,76 @@
+server {
+    listen 80;
+    listen [::]:80;
+    http2 on;
+    index index.php index.html;
+    server_name ${APP_HOST};
+    
+    # Configuração de log detalhado
+    # error_log /var/log/nginx/error.log debug;
+    # access_log /var/log/nginx/access.log;
+
+    error_log /dev/stderr debug;
+    access_log /dev/stdout combined;
+
+    # Ativar log de rewrite
+    rewrite_log on;
+
+    root /var/www/;
+    
+    # Regra para a raiz do site
+    location = / {
+        return 302 /${APP_NAME}/public/;
+    }
+
+    # Regra específica para /${APP_NAME} (sem trailing slash)
+    location = /${APP_NAME} {
+        return 302 /${APP_NAME}/public/;
+    }
+
+    # Regra específica para /${APP_NAME}/ (com trailing slash)
+    location = /${APP_NAME}/ {
+        return 302 /${APP_NAME}/public/;
+    }
+
+    # Regra para servir arquivos da pasta public do Laravel
+    location ^~ /${APP_NAME}/public/ {
+        # Importante: definir o root correto para a pasta public
+        alias /var/www/${APP_NAME}/public/;
+        
+        # Tenta encontrar o arquivo ou diretório real primeiro
+        try_files $uri $uri/ @laravel;
+        
+        # Configuração para arquivos PHP neste diretório
+        location ~ \.php$ {
+            # Importante: usar fastcgi_split_path_info para processar corretamente o caminho
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass ${PHP_HOST}:9000;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            # Ajuste o SCRIPT_FILENAME para apontar para o caminho correto
+            fastcgi_param SCRIPT_FILENAME /var/www/${APP_NAME}/public$fastcgi_script_name;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+    }
+    
+    # Regra especial para o Laravel router
+    location @laravel {
+        rewrite ^/${APP_NAME}/public/(.*)$ /${APP_NAME}/public/index.php?/$1 last;
+    }
+
+    # Regra para processar arquivos PHP fora da pasta public
+    location ~ \.php$ {
+        try_files $uri =400;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass ${PHP_HOST}:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    # Regra para outros caminhos
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
