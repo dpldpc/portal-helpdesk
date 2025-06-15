@@ -30,8 +30,17 @@ if [ ! -f "/var/www/${APP_NAME}/composer.json" ]; then
     pwd
     echo "Instalando Laravel..."
     # script -q -c "laravel new ${APP_NAME} --no-interaction --livewire --pest --npm " /dev/null
-    laravel new ${APP_NAME} --no-interaction --livewire --pest --npm 
-    echo "laravel Retornou ${?}"    
+    # laravel new ${APP_NAME} --no-interaction --livewire --pest --npm 
+    laravel new ${APP_NAME} --no-interaction --pest --npm
+    echo "laravel Retornou ${?}"  
+
+    cd ${APP_NAME}
+
+    composer require laravel/jetstream
+    php artisan jetstream:install livewire
+    npm install
+    npm run build
+    php artisan migrate
 fi
 
 mkdir -p /var/www/${APP_NAME}/public 

@@ -70,7 +70,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev libzip-dev libicu-dev \
-    zip unzip gnupg bind9-dnsutils iputils-ping gettext-base util-linux && \
+    zip unzip gnupg bind9-dnsutils iputils-ping gettext-base util-linux jq && \
     curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g yarn && \
@@ -98,7 +98,14 @@ COPY ../stuff/.env.example /tmp/.env.example
 COPY docker/${HOST_ENV}/php/entrypoint.sh /usr/local/bin/
 COPY docker/${HOST_ENV}/php/configura_env.sh /usr/local/bin/
 COPY docker/${HOST_ENV}/php/set_env.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/configura_env.sh /usr/local/bin/set_env.sh
+COPY docker/${HOST_ENV}/php/configura_tallstackui.sh /usr/local/bin/
+COPY docker/${HOST_ENV}/php/installpackage.sh /usr/local/bin/
+COPY docker/${HOST_ENV}/php/makepackage.sh /usr/local/bin/
+
+RUN mkdir -p /var/stuff
+COPY ../stuff/laravel-favicon-animado.tar.gz /var/stuff/
+
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/configura_env.sh /usr/local/bin/set_env.sh /usr/local/bin/configura_tallstackui.sh /usr/local/bin/installpackage.sh /usr/local/bin/makepackage.sh
 
 # USER devuser
 # RUN /usr/local/bin/set_env.sh
