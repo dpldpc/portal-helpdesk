@@ -1,7 +1,7 @@
 #!/bin/bash
-git subtree pull --prefix=${1} git@github.com:dpldpc/base-docker.git main --squash
+git subtree pull --prefix=base-docker git@github.com:dpldpc/base-docker.git main --squash
 if [ $? -ne 0 ]; then
-    echo "Failed to update ${1} subtree."
+    echo "Failed to update base-docker subtree."
     exit 1
 fi
-echo "Successfully updated ${1} subtree."
+echo "Successfully updated base-docker subtree."
