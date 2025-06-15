@@ -15,6 +15,15 @@ echo "chamando configura_env.sh..."
 /usr/local/bin/configura_env.sh
 echo "voltou de configura_env.sh..." 
 
+echo "chamando configura_tallstackui.sh..." 
+/usr/local/bin/configura_tallstackui.sh
+echo "voltou de configura_tallstackui.sh..." 
+
+cd /var/www/${APP_NAME}
+mkdir -p /var/www/${APP_NAME}/packages/Dgti
+cp /var/stuff/laravel-favicon-animado.tar.gz /var/www/${APP_NAME}/packages/Dgti
+/usr/local/bin/installpackage.sh 
+
 # if [ ! -f "/var/www/${APP_NAME}/composer.json" ]; then
 #     cd /var/www
 #     composer global require laravel/installer
