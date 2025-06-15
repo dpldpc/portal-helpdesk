@@ -35,3 +35,7 @@ docker/development/logs/php-fpm/error.log
 docker/development/nginx/conf.d
 tmp
 docker/development/helpdesk-formularios
+docker/development/docker-compose.override.yml
+docker/form-test-ftst
+docker/development/development
+docker/form-test-fff
