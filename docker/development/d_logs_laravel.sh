@@ -8,7 +8,10 @@ cp ../../../_env_development ./.env
 
 . ./.env 
 if [ -n "$COMPOSE_PROJECT_NAME" ]; then
-    export COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
+    # export COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
+    if [ -L "../${COMPOSE_PROJECT_NAME}" ]; then
+        rm "../${COMPOSE_PROJECT_NAME}"
+    fi
 
     (cd .. ; ln -sf ${HOST_ENV} ${COMPOSE_PROJECT_NAME})
 fi

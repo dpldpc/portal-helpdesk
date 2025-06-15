@@ -10,6 +10,8 @@ ARG APP_NAME
 ARG APP_HOST
 ARG APP_PREFIX
 ARG APP_URL_BASE
+ARG APP_ENV
+ARG APP_DEBUG
 ARG HOST_ENV
 ARG COMPOSER_PROJECT_DIR
 ARG REDIS_HOST
@@ -23,9 +25,11 @@ ARG DB_PASSWORD
 ARG DB_CONNECTION
 
 ENV APP_NAME=${APP_NAME}
+ENV APP_DEBUG=${APP_DEBUG}
 ENV APP_HOST=${APP_HOST}
 ENV APP_PREFIX=${APP_PREFIX}
 ENV APP_URL_BASE=${APP_URL_BASE}
+ENV APP_ENV=${APP_ENV}
 ENV HOST_ENV=${HOST_ENV}
 ENV COMPOSER_PROJECT_DIR=${COMPOSER_PROJECT_DIR}
 ENV REDIS_HOST=${REDIS_HOST}
@@ -37,6 +41,8 @@ ENV DB_DATABASE=${DB_DATABASE}
 ENV DB_USERNAME=${DB_USERNAME}
 ENV DB_PASSWORD=${DB_PASSWORD}
 ENV DB_CONNECTION=${DB_CONNECTION}
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 
 # Instalar dependências e extensões PHP
 # RUN apt-get update && apt-get install -y \
@@ -64,7 +70,7 @@ ENV DB_CONNECTION=${DB_CONNECTION}
 
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev libzip-dev libicu-dev \
-    zip unzip gnupg bind9-dnsutils iputils-ping gettext-base && \
+    zip unzip gnupg bind9-dnsutils iputils-ping gettext-base util-linux jq && \
     curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g yarn && \
@@ -90,9 +96,19 @@ COPY ../stuff/.env.example /tmp/.env.example
 
 # Adicionar entrypoint
 COPY docker/${HOST_ENV}/php/entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY docker/${HOST_ENV}/php/configura_env.sh /usr/local/bin/
+COPY docker/${HOST_ENV}/php/set_env.sh /usr/local/bin/
+COPY docker/${HOST_ENV}/php/configura_tallstackui.sh /usr/local/bin/
+COPY docker/${HOST_ENV}/php/installpackage.sh /usr/local/bin/
+COPY docker/${HOST_ENV}/php/makepackage.sh /usr/local/bin/
+
+RUN mkdir -p /var/stuff
+COPY ../stuff/laravel-favicon-animado.tar.gz /var/stuff/
+
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/configura_env.sh /usr/local/bin/set_env.sh /usr/local/bin/configura_tallstackui.sh /usr/local/bin/installpackage.sh /usr/local/bin/makepackage.sh
 
 # USER devuser
+# RUN /usr/local/bin/set_env.sh
 
 WORKDIR /var/www
 ENTRYPOINT ["entrypoint.sh"]

@@ -18,4 +18,8 @@ fi
 ./d_gen_override.sh
 
 export DOCKER_SOCKET_PATH=$(echo $DOCKER_HOST | sed 's|unix://||')
-docker compose exec php bash
+
+export COMPOSE_BAKE=true
+export DOCKER_BUILDKIT=1
+
+docker compose up mysql -d --build
