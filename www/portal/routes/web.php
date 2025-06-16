@@ -1,15 +1,24 @@
 <?php
 
+use Livewire\Livewire;
+
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
 
-require __DIR__.'/auth.php';
+Livewire::setUpdateRoute(function ($handle) {
+return Route::post('/portal/livewire/update', $handle)->name('livewire.update');
+});

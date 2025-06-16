@@ -1,0 +1,23 @@
+{
+    "name": "dgti/laravel-favicon-animado",
+    "description": "Componentes Blade para favicon animado e barra de ouvidoria",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "dgti\\FaviconAnimado\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "dgti\\FaviconAnimado\\FaviconAnimadoServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    }
+}
