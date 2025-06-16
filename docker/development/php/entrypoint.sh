@@ -20,9 +20,12 @@ echo "chamando configura_tallstackui.sh..."
 echo "voltou de configura_tallstackui.sh..." 
 
 cd /var/www/${APP_NAME}
-mkdir -p /var/www/${APP_NAME}/packages/Dgti
-cp /var/stuff/laravel-favicon-animado.tar.gz /var/www/${APP_NAME}/packages/Dgti
+mkdir -p /var/www/${APP_NAME}/packages/dgti
+cp /var/stuff/laravel-favicon-animado.tar.gz /var/www/${APP_NAME}/packages/dgti
 /usr/local/bin/installpackage.sh 
+
+cp -r /var/stuff/pics/ /var/www/${APP_NAME}/public/
+
 
 # if [ ! -f "/var/www/${APP_NAME}/composer.json" ]; then
 #     cd /var/www
