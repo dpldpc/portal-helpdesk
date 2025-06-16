@@ -102,8 +102,9 @@ COPY docker/${HOST_ENV}/php/configura_tallstackui.sh /usr/local/bin/
 COPY docker/${HOST_ENV}/php/installpackage.sh /usr/local/bin/
 COPY docker/${HOST_ENV}/php/makepackage.sh /usr/local/bin/
 
-RUN mkdir -p /var/stuff
+RUN mkdir -p /var/stuff/pics
 COPY ../stuff/laravel-favicon-animado.tar.gz /var/stuff/
+COPY ../stuff/pics/* /var/stuff/pics/
 
 RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/configura_env.sh /usr/local/bin/set_env.sh /usr/local/bin/configura_tallstackui.sh /usr/local/bin/installpackage.sh /usr/local/bin/makepackage.sh
 

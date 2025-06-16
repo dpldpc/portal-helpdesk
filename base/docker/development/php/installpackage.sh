@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VENDOR="Dgti"
+VENDOR="dgti"
 PACKAGE="laravel-favicon-animado"
 PACKAGE_TAR="packages/$VENDOR/${PACKAGE}.tar.gz"
 PACKAGE_DIR="packages/$VENDOR/$PACKAGE"

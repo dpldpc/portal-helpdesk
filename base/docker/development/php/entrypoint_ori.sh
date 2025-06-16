@@ -67,6 +67,7 @@ if [ ! -f "/var/www/${APP_NAME}/composer.json" ]; then
     composer require tallstackui/tallstackui:^2.0.0
     # npm run build && php artisan optimize:clear
     
+    
     # Etapa 5: Garantir chave de aplicação
     echo "Gerando chave de aplicação..."
     php artisan key:generate --force --no-interaction
